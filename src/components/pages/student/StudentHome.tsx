@@ -2,6 +2,7 @@ import { Card, CardContent } from '../../ui/card';
 import { Progress } from '../../ui/progress';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { 
   TrendingUp, 
   Calendar, 
@@ -9,7 +10,10 @@ import {
   Clock,
   BookOpen,
   Bell,
-  ArrowRight
+  ArrowRight,
+  FileText,
+  Paperclip,
+  User as UserIcon
 } from 'lucide-react';
 import { User } from '../../../App';
 
@@ -50,36 +54,89 @@ export function StudentHome({ user }: StudentHomeProps) {
     }
   ];
 
+  // Recent announcements from teachers (matching StudentNotifications data)
   const recentNotifications = [
     {
-      id: 1,
-      title: 'Assignment Due Tomorrow',
-      message: 'Mathematics homework Chapter 5 is due tomorrow',
-      time: '2 hours ago',
-      type: 'assignment'
+      id: '1',
+      title: 'Mid-term Examination Schedule Released',
+      message: 'Dear students, the mid-term examination schedule for all subjects has been released. Please check the attached PDF for detailed timings and examination halls.',
+      timestamp: new Date('2024-01-15T10:30:00'),
+      teacherName: 'Dr. Sarah Johnson',
+      teacherAvatar: '',
+      attachment: {
+        name: 'midterm-schedule.pdf',
+        type: 'pdf' as const,
+        url: '#',
+        size: '245 KB'
+      },
+      isRead: false
     },
     {
-      id: 2,
-      title: 'Class Cancelled',
-      message: 'Physics lab scheduled for Friday has been cancelled',
-      time: '1 day ago',
-      type: 'announcement'
+      id: '2',
+      title: 'Guest Lecture on AI & Machine Learning',
+      message: 'We are excited to announce a special guest lecture by Dr. Michael Chen from MIT on "The Future of AI and Machine Learning in Industry".',
+      timestamp: new Date('2024-01-14T14:15:00'),
+      teacherName: 'Prof. David Wilson',
+      teacherAvatar: '',
+      attachment: {
+        name: 'guest-lecture-flyer.jpg',
+        type: 'image' as const,
+        url: '#',
+        size: '1.2 MB'
+      },
+      isRead: true
     },
     {
-      id: 3,
-      title: 'Grade Posted',
-      message: 'Your English essay grade has been posted',
-      time: '2 days ago',
-      type: 'grade'
+      id: '3',
+      title: 'Assignment Submission Deadline Extended',
+      message: 'The deadline for Database Systems assignment has been extended to next Friday due to technical issues with the submission portal.',
+      timestamp: new Date('2024-01-13T09:45:00'),
+      teacherName: 'Dr. Emily Davis',
+      teacherAvatar: '',
+      isRead: true
+    },
+    {
+      id: '4',
+      title: 'Library Hours Extended During Exam Week',  
+      message: 'To support students during the upcoming examination period, the library will extend its hours from 7:00 AM to 11:00 PM starting from next Monday.',
+      timestamp: new Date('2024-01-12T16:20:00'),
+      teacherName: 'Prof. Robert Brown',
+      teacherAvatar: '',
+      isRead: true
     }
   ];
 
-  const getNotificationIcon = (type: string) => {
+  const formatDate = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+
+    if (days === 0) {
+      if (hours === 0) {
+        const minutes = Math.floor((diff / (1000 * 60)));
+        return minutes <= 1 ? 'Just now' : `${minutes}m ago`;
+      }
+      return hours === 1 ? '1h ago' : `${hours}h ago`;
+    } else if (days === 1) {
+      return 'Yesterday';
+    } else if (days < 7) {
+      return `${days}d ago`;
+    } else {
+      return date.toLocaleDateString();
+    }
+  };
+
+  const getAttachmentIcon = (type: string) => {
     switch (type) {
-      case 'assignment': return '📝';
-      case 'announcement': return '📢';
-      case 'grade': return '📊';
-      default: return '📬';
+      case 'pdf':
+        return <FileText className="h-3 w-3 text-red-500" />;
+      case 'image':
+        return <FileText className="h-3 w-3 text-blue-500" />;
+      case 'doc':
+        return <FileText className="h-3 w-3 text-blue-600" />;
+      default:
+        return <Paperclip className="h-3 w-3 text-gray-500" />;
     }
   };
 
@@ -211,14 +268,44 @@ export function StudentHome({ user }: StudentHomeProps) {
             </div>
 
             <div className="space-y-4">
-              {recentNotifications.map((notification) => (
-                <div key={notification.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+              {recentNotifications.slice(0, 4).map((notification) => (
+                <div 
+                  key={notification.id} 
+                  className={`p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${
+                    !notification.isRead ? 'border-blue-200 bg-blue-50' : 'border-gray-200'
+                  }`}
+                >
                   <div className="flex items-start gap-3">
-                    <span className="text-lg">{getNotificationIcon(notification.type)}</span>
-                    <div className="flex-1">
-                      <h3 className="font-medium text-gray-900">{notification.title}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-                      <p className="text-xs text-gray-500 mt-2">{notification.time}</p>
+                    <Avatar className="h-8 w-8 flex-shrink-0">
+                      <AvatarImage src={notification.teacherAvatar} alt={notification.teacherName} />
+                      <AvatarFallback className="text-xs">
+                        {notification.teacherName.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-1">
+                        <h3 className={`font-medium text-gray-900 line-clamp-1 ${!notification.isRead ? 'text-blue-900' : ''}`}>
+                          {notification.title}
+                          {!notification.isRead && (
+                            <span className="inline-block w-2 h-2 bg-blue-500 rounded-full ml-2"></span>
+                          )}
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-600 mb-2">
+                        <UserIcon className="h-3 w-3" />
+                        <span>{notification.teacherName}</span>
+                        <span>•</span>
+                        <span>{formatDate(notification.timestamp)}</span>
+                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+                        {notification.message}
+                      </p>
+                      {notification.attachment && (
+                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                          {getAttachmentIcon(notification.attachment.type)}
+                          <span>{notification.attachment.name}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

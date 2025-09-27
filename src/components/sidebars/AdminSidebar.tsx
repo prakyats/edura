@@ -31,19 +31,9 @@ export function AdminSidebar({ user, currentPage, onNavigate, onLogout, isOpen, 
       icon: LayoutDashboard
     },
     {
-      id: 'manage-users' as AdminPage,
-      label: 'Manage Users',
-      icon: Users
-    },
-    {
       id: 'manage-branches' as AdminPage,
       label: 'Manage Branches & Students',
       icon: Building2
-    },
-    {
-      id: 'schedule-optimization' as AdminPage,
-      label: 'Schedule Optimization',
-      icon: Calendar
     },
     {
       id: 'reports' as AdminPage,

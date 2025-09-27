@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { AdminSidebar } from '../sidebars/AdminSidebar';
 import { AdminDashboard } from '../pages/admin/AdminDashboard';
-import { AdminManageUsers } from '../pages/admin/AdminManageUsers';
 import { AdminManageBranches } from '../pages/admin/AdminManageBranches';
 import { AdminScheduleOptimization } from '../pages/admin/AdminScheduleOptimization';
 import { AdminReports } from '../pages/admin/AdminReports';
@@ -22,8 +21,6 @@ export function AdminLayout({ user, onLogout }: AdminLayoutProps) {
     switch (currentPage) {
       case 'dashboard':
         return <AdminDashboard user={user} />;
-      case 'manage-users':
-        return <AdminManageUsers user={user} />;
       case 'manage-branches':
         return <AdminManageBranches user={user} />;
       case 'schedule-optimization':

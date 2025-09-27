@@ -8,13 +8,13 @@ import { Toaster } from './components/ui/sonner';
 export type UserRole = 'student' | 'teacher' | 'admin';
 
 // Student pages
-export type StudentPage = 'home' | 'timetable' | 'attendance';
+export type StudentPage = 'home' | 'timetable' | 'attendance' | 'notifications';
 
 // Teacher pages  
 export type TeacherPage = 'dashboard' | 'classes' | 'schedule-editor' | 'timetable-editor' | 'announcements' | 'mark-attendance' | 'notifications' | 'profile';
 
 // Admin pages
-export type AdminPage = 'dashboard' | 'manage-users' | 'manage-branches' | 'schedule-optimization' | 'reports' | 'notifications' | 'profile';
+export type AdminPage = 'dashboard' | 'manage-branches' | 'schedule-optimization' | 'reports' | 'notifications' | 'profile';
 
 export interface User {
   id: string;

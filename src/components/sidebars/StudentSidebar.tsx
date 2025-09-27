@@ -2,6 +2,7 @@ import {
   Home, 
   Calendar, 
   BarChart3,
+  Bell,
   LogOut,
   GraduationCap,
   X
@@ -35,6 +36,11 @@ export function StudentSidebar({ user, currentPage, onNavigate, onLogout, isOpen
       id: 'attendance' as StudentPage,
       label: 'Attendance',
       icon: BarChart3
+    },
+    {
+      id: 'notifications' as StudentPage,
+      label: 'Notifications',
+      icon: Bell
     }
   ];
 

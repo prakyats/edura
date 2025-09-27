@@ -3,6 +3,7 @@ import { StudentSidebar } from '../sidebars/StudentSidebar';
 import { StudentHome } from '../pages/student/StudentHome';
 import { StudentTimetable } from '../pages/student/StudentTimetable';
 import { StudentAttendance } from '../pages/student/StudentAttendance';
+import { StudentNotifications } from '../pages/student/StudentNotifications';
 import { User, StudentPage } from '../../App';
 
 interface StudentLayoutProps {
@@ -22,6 +23,8 @@ export function StudentLayout({ user, onLogout }: StudentLayoutProps) {
         return <StudentTimetable user={user} />;
       case 'attendance':
         return <StudentAttendance user={user} />;
+      case 'notifications':
+        return <StudentNotifications user={user} />;
       default:
         return <StudentHome user={user} />;
     }
